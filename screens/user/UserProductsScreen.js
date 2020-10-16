@@ -1,5 +1,5 @@
-import React from 'react'
-import { FlatList, Button, Platform } from 'react-native'
+import React, { useCallback } from 'react'
+import { FlatList, Button, Platform, Alert } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
@@ -16,6 +16,18 @@ const UserProductsScreen = (props) => {
     props.navigation.navigate('EditProduct', { productId: id })
   }
 
+  const deleteHandler = (id) => {
+    Alert.alert('Are you sure?', 'Do you really want to delete this item', [
+      { text: 'No', style: 'default' },
+      {
+        text: 'Yes',
+        style: 'destructive',
+        onPress: () => {
+          dispatch(productsActions.deleteProduct(id))
+        },
+      },
+    ])
+  }
   return (
     <FlatList
       data={userProducts}
@@ -39,9 +51,7 @@ const UserProductsScreen = (props) => {
           <Button
             color={Colors.primary}
             title="Delete"
-            onPress={() => {
-              dispatch(productsActions.deleteProduct(itemData.item.id))
-            }}
+            onPress={deleteHandler.bind(this, itemData.item.id)}
           />
         </ProductItem>
       )}
@@ -49,32 +59,41 @@ const UserProductsScreen = (props) => {
   )
 }
 
+const HeaderLeftButton = ({ navData }) => {
+  const toogleDrawer = useCallback(() => {
+    navData.navigation.toggleDrawer()
+  }, [navData.navigation.toggleDrawer])
+
+  return (
+    <HeaderButtons HeaderButtonComponent={HeaderButton}>
+      <Item
+        title="Menu"
+        iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+        onPress={toogleDrawer}
+      />
+    </HeaderButtons>
+  )
+}
+
+const HeaderRightButton = (props) => {
+  const navigate = useCallback(() => {
+    props.navData.navigation.navigate('EditProduct')
+  }, [props])
+  return (
+    <HeaderButtons HeaderButtonComponent={HeaderButton}>
+      <Item
+        title="Add"
+        iconName={'android' ? 'md-create' : 'ios-create'}
+        onPress={navigate}
+      />
+    </HeaderButtons>
+  )
+}
 UserProductsScreen.navigationOptions = (navData) => {
   return {
     headerTitle: 'Your Products',
-    headerLeft: (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Menu"
-          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-          onPress={() => {
-            navData.navigation.toggleDrawer()
-          }}
-        />
-      </HeaderButtons>
-    ),
-    headerRight: (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Add"
-          iconName={'android' ? 'md-create' : 'ios-create'}
-          onPress={() => {
-            navData.navigation.navigate('EditProduct')
-          }}
-        />
-      </HeaderButtons>
-    ),
+    headerLeft: () => <HeaderLeftButton navData={navData} />,
+    headerRight: () => <HeaderRightButton navData={navData} />,
   }
 }
-
 export default UserProductsScreen
