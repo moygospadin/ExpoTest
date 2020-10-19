@@ -8,11 +8,12 @@ import orderReducer from './store/reducers/orders'
 import productsReducer from './store/reducers/products'
 import cartReducer from './store/reducers/cart'
 import ReduxThunk from 'redux-thunk'
-
+import authReducer from './store/reducers/auth'
 const rootReducer = combineReducers({
   products: productsReducer,
   cart: cartReducer,
   orders: orderReducer,
+  auth: authReducer,
 })
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk))

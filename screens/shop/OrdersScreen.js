@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, ActivityIndicator, View } from 'react-native'
+import {
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  View,
+  Text,
+} from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import HeaderButton from '../../components/UI/HeaderButton'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
@@ -26,7 +32,13 @@ const OrdersScreen = (props) => {
       </View>
     )
   }
-
+  if (orders.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No order found, maybe ordering some products?</Text>
+      </View>
+    )
+  }
   return (
     <FlatList
       data={orders}
