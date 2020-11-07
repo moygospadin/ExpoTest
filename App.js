@@ -1,53 +1,58 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, Button, FlatList } from 'react-native'
-import GoalInput from './components/GoaInput'
-import GoalItem from './components/GoalItem'
+import React, { useRef } from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  FlatList,
+  Animated,
+  TouchableOpacity,
+} from 'react-native'
 
 export default function App() {
-  const [lifeGoals, setLifeGoals] = useState([])
-  const [isAddmode, setIsAddMode] = useState(false)
-  const addGoalHandler = (goalTitle) => {
-    setLifeGoals((currentLifeGoals) => [
-      ...currentLifeGoals,
-      { id: Math.random().toString(), value: goalTitle },
-    ])
-    setIsAddMode(false)
-  }
+  const opacity = useRef(new Animated.Value(0)).current
 
-  const removeGoalHandler = (goalId) => {
-    setLifeGoals((currentGoals) => {
-      return currentGoals.filter((goal) => goal.id !== goalId)
-    })
+  function fadeInBall() {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start()
   }
-  const cancelHandler = () => {
-    setIsAddMode(false)
+  function fadeOutBall() {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start()
   }
   return (
-    <View style={styles.screen}>
-      <Button title="Add new goal" onPress={() => setIsAddMode(true)} />
-      <GoalInput
-        onCancel={cancelHandler}
-        visible={isAddmode}
-        onAddGoal={addGoalHandler}
-      />
-
-      <FlatList
-        keyExtractor={(item) => item.id}
-        data={lifeGoals}
-        renderItem={(itemData) => (
-          <GoalItem
-            id={itemData.item.id}
-            onDelete={removeGoalHandler}
-            title={itemData.item.value}
-          />
-        )}
-      />
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Animated.View
+          style={[
+            {
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              opacity,
+              backgroundColor: 'red',
+            },
+          ]}
+        />
+        <TouchableOpacity onPress={fadeOutBall}>
+          <Text>Fade out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={fadeInBall}>
+          <Text>Fade in</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    padding: 50,
-  },
-})
