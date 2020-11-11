@@ -5,11 +5,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import styles from './Home.styles'
 
 export function lab6() {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState([])
   const [name, setName] = useState('')
   const [faculty, setFaculty] = useState('')
   const [group, setGroup] = useState('')
-  const key = 'students_data'
+  const key = 'students_data1'
 
   useEffect(() => {
     const init = async () => {
@@ -22,8 +22,9 @@ export function lab6() {
   const saveDeviceData = async (key, data) => {
     try {
       if (!name || !faculty || !group) return
+      const oldData = data || []
       const newData = [
-        ...data,
+        ...oldData,
         {
           id: Math.random(),
           name,
@@ -61,22 +62,22 @@ export function lab6() {
       )}
       <View>
         <TextInput
-          placeholder="name"
           style={styles.input}
           onChangeText={(v) => setName(v)}
           value={name}
+          placeholder="name"
         />
         <TextInput
-          placeholder="faculty"
           style={styles.input}
           onChangeText={(v) => setFaculty(v)}
           value={faculty}
+          placeholder="faculty"
         />
         <TextInput
-          placeholder="group"
           style={styles.input}
           onChangeText={(v) => setGroup(v)}
           value={group}
+          placeholder="group"
         />
       </View>
       <View style={styles.button}>

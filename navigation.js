@@ -21,7 +21,7 @@ function MainNavigator() {
         <Drawer.Screen name="lab3" component={lab3} />
         {/* <Drawer.Screen name="lab4" component={lab4} /> */}
         <Drawer.Screen name="lab5" component={lab5} />
-        {/* <Drawer.Screen name="lab6" component={lab6} /> */}
+        <Drawer.Screen name="lab6" component={lab6} />
         <Drawer.Screen name="lab7" component={lab7} />
         <Drawer.Screen name="lab8" component={lab8} />
       </Drawer.Navigator>
